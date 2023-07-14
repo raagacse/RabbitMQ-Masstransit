@@ -6,3 +6,9 @@ public class Order
     public string? productName { get; set; }
     public int count { get; set; }
 }
+
+public class OrderType
+{
+    public int productType { get; set; }
+    public string? productTypeName { get; set; }
+}

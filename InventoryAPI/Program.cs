@@ -8,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddMassTransit(x =>
 {
     x.AddConsumer<OrderConsumer>();
+    x.AddConsumer<OrderTypeConsumer>();
 
     x.UsingRabbitMq((ctx, cfg) =>
     {
@@ -16,6 +17,11 @@ builder.Services.AddMassTransit(x =>
         cfg.ReceiveEndpoint("Order-Queue", c =>
         {
             c.ConfigureConsumer<OrderConsumer>(ctx);
+        });
+
+        cfg.ReceiveEndpoint("order-type", c =>
+        {
+            c.ConfigureConsumer<OrderTypeConsumer>(ctx);
         });
     });
 });

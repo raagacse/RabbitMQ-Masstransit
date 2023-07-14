@@ -24,4 +24,12 @@ public class OrderController : ControllerBase
         await _publishEndPoint.Publish<Order>(order);
         return Ok();
     }
+
+    [HttpPost]
+    [Route("ordertype")]
+    public async Task<IActionResult> OrderType(OrderType orderType)
+    {
+        await _publishEndPoint.Publish<OrderType>(orderType);
+        return Ok();
+    }
 }
