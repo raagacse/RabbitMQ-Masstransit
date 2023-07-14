@@ -1,2 +1,2 @@
 # RabbitMQ-Masstransit
- MassTransit with RabbitMQ in .Net Core
+ MassTransit using RabbitMQ in .Net Core
