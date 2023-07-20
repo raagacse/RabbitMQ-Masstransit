@@ -1,4 +1,5 @@
 using MassTransit;
+using OrderAPI.Consumer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,9 +9,16 @@ builder.Services.AddControllers();
 
 builder.Services.AddMassTransit(x =>
 {
+    x.AddConsumer<OrderStatusConsumer>();
+
     x.UsingRabbitMq((ctx, cfg) =>
     {
         cfg.Host("amqp://user:mypass@localhost:5672");
+
+        cfg.ReceiveEndpoint("Order-Status", c =>
+        {
+            c.ConfigureConsumer<OrderStatusConsumer>(ctx);
+        });
     });
 });
 
