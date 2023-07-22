@@ -1,5 +1,5 @@
 using MassTransit;
-using SharedLibrary;
+using InventoryAPI.SharedLibrary;
 
 namespace InventoryAPI.Consumer;
 

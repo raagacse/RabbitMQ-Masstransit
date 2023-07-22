@@ -1,4 +1,4 @@
-﻿namespace SharedLibrary.xx;
+namespace OrderAPI.SharedLibrary;
 
 public class Order
 {
