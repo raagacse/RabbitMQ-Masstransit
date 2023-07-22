@@ -1,6 +1,6 @@
 
 using MassTransit;
-using OrderAPI.SharedLibrary;
+using SharedLibrary;
 
 namespace OrderAPI.Consumer;
 

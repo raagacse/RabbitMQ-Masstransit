@@ -1,32 +1,67 @@
 using InventoryAPI.Consumer;
+using InventoryAPI.Models;
 using MassTransit;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var environment = builder.Configuration.GetValue<string>("Environment");
+
+var config = new ConfigurationBuilder()
+    .AddJsonFile($"appsettings.{environment}.json")
+    .Build();
+
+var rabbitMQConn = config.GetSection("RabbitMQConnection").Get<RabbitMQConnection>();
+
 // Add services to the container.
+
+builder.Services.AddControllers();
+
+// builder.Services.AddMassTransit(x =>
+// {
+//     x.AddConsumer<OrderConsumer>();
+//     x.AddConsumer<OrderTypeConsumer>();
+
+//     x.UsingRabbitMq((ctx, cfg) =>
+//     {
+//         cfg.Host("amqp://user:mypass@localhost:5672");
+
+//         cfg.ReceiveEndpoint("Order-Queue", c =>
+//         {
+//             c.ConfigureConsumer<OrderConsumer>(ctx);
+//         });
+
+//         cfg.ReceiveEndpoint("order-type", c =>
+//         {
+//             c.ConfigureConsumer<OrderTypeConsumer>(ctx);
+//         });
+//     });
+// });
 
 builder.Services.AddMassTransit(x =>
 {
     x.AddConsumer<OrderConsumer>();
     x.AddConsumer<OrderTypeConsumer>();
 
-    x.UsingRabbitMq((ctx, cfg) =>
+    x.AddBus(provider => Bus.Factory.CreateUsingRabbitMq(config =>
     {
-        cfg.Host("amqp://user:mypass@localhost:5672");
-
-        cfg.ReceiveEndpoint("Order-Queue", c =>
+        config.Host(rabbitMQConn.hostName, h =>
         {
-            c.ConfigureConsumer<OrderConsumer>(ctx);
+            h.Username(rabbitMQConn.userName);
+            h.Password(rabbitMQConn.password);
         });
 
-        cfg.ReceiveEndpoint("order-type", c =>
+        config.ReceiveEndpoint("Order-Queue", c =>
         {
-            c.ConfigureConsumer<OrderTypeConsumer>(ctx);
+            c.ConfigureConsumer<OrderConsumer>(provider);
         });
-    });
+        config.ReceiveEndpoint("Order-type", c =>
+        {
+            c.ConfigureConsumer<OrderTypeConsumer>(provider);
+        });
+    }));
 });
 
-builder.Services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

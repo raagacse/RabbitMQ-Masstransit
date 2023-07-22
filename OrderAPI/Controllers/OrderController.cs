@@ -1,6 +1,6 @@
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
-using OrderAPI.SharedLibrary;
+using SharedLibrary;
 
 namespace OrderAPI.Controllers;
 

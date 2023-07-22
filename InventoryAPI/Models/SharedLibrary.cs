@@ -1,4 +1,4 @@
-namespace InventoryAPI.SharedLibrary;
+namespace SharedLibrary;
 
 public class Order
 {

@@ -1,5 +1,5 @@
 using MassTransit;
-using InventoryAPI.SharedLibrary;
+using SharedLibrary;
 
 namespace InventoryAPI.Consumer;
 internal class OrderConsumer : IConsumer<Order>
